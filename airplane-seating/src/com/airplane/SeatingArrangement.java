@@ -18,15 +18,9 @@ public class SeatingArrangement {
 	public static void main(String[] args) {
 		List<Integer[]> seatsGrid = new ArrayList<>();
 		Integer[] seatGrid1 = { 3, 2 };
-		Integer[] seatGrid2 = { 2, 4 };
-		Integer[] seatGrid3 = { 2, 3 };
-		Integer[] seatGrid4 = { 3, 4 };
-		Integer[] seatGrid5 = { 3, 5 };
+		Integer[] seatGrid2 = { 2, 3 };
 		seatsGrid.add(seatGrid1);
 		seatsGrid.add(seatGrid2);
-		seatsGrid.add(seatGrid3);
-		seatsGrid.add(seatGrid4);
-		seatsGrid.add(seatGrid5);
 		///To Print result in CSV file, please enter fileName, else leave it blank  
 		String FileName = ""; 
 		
@@ -66,7 +60,8 @@ public class SeatingArrangement {
 	private static void allocateAisleSeats(String[][][] seats, List<Integer[]> seatsGrid) {
 		int row = 0;
 		System.out.println();
-		while (!passengersQueue.isEmpty() && row < seats.length) {
+		int maxRows = Arrays.stream(seats).map(rows -> rows.length).max(Integer::compare).get();
+		while (!passengersQueue.isEmpty() && row < maxRows) {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
 					// Iterate through all the first rows in each column one by one
@@ -95,7 +90,8 @@ public class SeatingArrangement {
 	private static void allocateWindowSeats(String[][][] seats, List<Integer[]> seatsGrid) {
 		int row = 0;
 		System.out.println();
-		while (!passengersQueue.isEmpty() && row < seats.length) {
+		int maxRows = Arrays.stream(seats).map(rows -> rows.length).max(Integer::compare).get();
+		while (!passengersQueue.isEmpty() && row < maxRows) {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
 					for (int seat = 0; seat < seats[col][row].length && !passengersQueue.isEmpty(); seat++) {
@@ -117,7 +113,8 @@ public class SeatingArrangement {
 	private static void allocateCenterSeats(String[][][] seats, List<Integer[]> seatsGrid) {
 		int row = 0;
 		System.out.println();
-		while (!passengersQueue.isEmpty() && row < seats.length) {
+		int maxRows = Arrays.stream(seats).map(rows -> rows.length).max(Integer::compare).get();
+		while (!passengersQueue.isEmpty() && row < maxRows) {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
 					for (int seat = 0; seat < seats[col][row].length && !passengersQueue.isEmpty(); seat++) {
@@ -133,7 +130,8 @@ public class SeatingArrangement {
 	}
 
 	private static void printSeats(String[][][] seats, List<Integer[]> seatsGrid) {
-		for (int row = 0; row < seats.length; row++) {
+		int maxRows = Arrays.stream(seats).map(rows -> rows.length).max(Integer::compare).get();
+		for (int row = 0; row < maxRows; row++) {
 			for (int col = 0; col < seats.length; col++) {
 				//To check a row exists in that layout grid
 				if (seatsGrid.get(col)[1] > row) {
@@ -193,6 +191,21 @@ public class SeatingArrangement {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String[][][] allocateSeats(List<Integer[]> seatsGrid, int passengers) {
+		String[][][] seats = constructSeatsMatrix(seatsGrid);
+		for (int i = 1; i <= passengers; i++) {
+			passengersQueue.add(i);
+		}
+		allocateAisleSeats(seats, seatsGrid);
+		allocateWindowSeats(seats, seatsGrid);
+		allocateCenterSeats(seats, seatsGrid);
+		if(!passengersQueue.isEmpty()) {
+			int allottedSeats = Integer.valueOf(passengersQueue.peek()) -1 ;
+			System.out.println("Not Enough Seats, Seats only Allocated for " + allottedSeats + " passengers");
+		}
+		return seats;
 	}
 	
 }

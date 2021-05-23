@@ -26,7 +26,7 @@ public class SeatingArrangement {
 		seatsGrid.add(seatGrid3);
 		seatsGrid.add(seatGrid4);
 		///To Print result in CSV file, please enter fileName, else leave it blank  
-		String FileName = "D:\\seating-arrangement.csv"; 
+		String FileName = ""; 
 		
 		for (int i = 1; i <= passengers; i++) {
 			passengersQueue.add(i);
@@ -67,6 +67,7 @@ public class SeatingArrangement {
 		while (!passengersQueue.isEmpty() && row < seats.length) {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
+					// Iterate through all the first rows in each column one by one
 					for (int seat = 0; seat < seats[col][row].length && !passengersQueue.isEmpty(); seat++) {
 						// To Avoid Window Seat in First Column
 						if (col == 0) {
@@ -96,9 +97,12 @@ public class SeatingArrangement {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
 					for (int seat = 0; seat < seats[col][row].length && !passengersQueue.isEmpty(); seat++) {
+						// Window Seat in first Column
 						if (col == 0 && seat == 0) {
 							seats[col][row][seat] = passengersQueue.remove().toString();
-						} else if (col == seats.length - 1 && seat == seats[col][row].length - 1) {
+						} 
+						// Window Seat in last Column
+						else if (col == seats.length - 1 && seat == seats[col][row].length - 1) {
 							seats[col][row][seat] = passengersQueue.remove().toString();
 						}
 					}
@@ -115,6 +119,7 @@ public class SeatingArrangement {
 			for (int col = 0; col < seats.length; col++) {
 				if (seatsGrid.get(col)[1] > row) {
 					for (int seat = 0; seat < seats[col][row].length && !passengersQueue.isEmpty(); seat++) {
+						//All Empty Seats will be filled with the passengers left in Queue
 						if (seats[col][row][seat] == "E") {
 							seats[col][row][seat] = passengersQueue.remove().toString();
 						}
@@ -128,14 +133,19 @@ public class SeatingArrangement {
 	private static void printSeats(String[][][] seats, List<Integer[]> seatsGrid) {
 		for (int row = 0; row < seats.length; row++) {
 			for (int col = 0; col < seats.length; col++) {
+				//To check a row exists in that layout grid
 				if (seatsGrid.get(col)[1] > row) {
 					for (int seat = 0; seat < seats[col][row].length; seat++) {
 						System.out.print("|");
 						System.out.print(seats[col][row][seat] == "E" ? "--" : seats[col][row][seat]);
 						System.out.print("|"); 
 					}
-				} else {
-					System.out.print("\t");
+				}
+				// If a row doesn't exist, using blank space to fill it
+				else {
+					int noofColsinThatGrid = seatsGrid.get(col)[0];
+					String fillers = new String(new char[noofColsinThatGrid]).replace("\0", "   ");
+					System.out.print(fillers);
 				}
 				System.out.print("   ");
 			}

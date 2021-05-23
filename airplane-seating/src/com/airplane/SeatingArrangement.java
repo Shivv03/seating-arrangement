@@ -12,19 +12,21 @@ import java.util.Queue;
 
 public class SeatingArrangement {
 
-	public static final int passengers = 30;
+	public static final int passengers = 50;
 	public static Queue<Integer> passengersQueue = new LinkedList<>();
 
 	public static void main(String[] args) {
 		List<Integer[]> seatsGrid = new ArrayList<>();
 		Integer[] seatGrid1 = { 3, 2 };
-		Integer[] seatGrid2 = { 4, 3 };
+		Integer[] seatGrid2 = { 2, 4 };
 		Integer[] seatGrid3 = { 2, 3 };
 		Integer[] seatGrid4 = { 3, 4 };
+		Integer[] seatGrid5 = { 3, 5 };
 		seatsGrid.add(seatGrid1);
 		seatsGrid.add(seatGrid2);
 		seatsGrid.add(seatGrid3);
 		seatsGrid.add(seatGrid4);
+		seatsGrid.add(seatGrid5);
 		///To Print result in CSV file, please enter fileName, else leave it blank  
 		String FileName = ""; 
 		
@@ -147,7 +149,7 @@ public class SeatingArrangement {
 					String fillers = new String(new char[noofColsinThatGrid]).replace("\0", "   ");
 					System.out.print(fillers);
 				}
-				System.out.print("   ");
+				System.out.print("      ");
 			}
 			System.out.println("");
 		}
